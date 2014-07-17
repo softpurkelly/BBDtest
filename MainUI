@@ -1,0 +1,87 @@
+package edu.pitt.flashcard;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import java.awt.Font;
+import java.awt.Color;
+
+import javax.swing.JButton;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+/**
+ * This is the UI for the main menu. It simply presents buttons to take the user to the flashcard creation screen or the flashcard quiz screen.
+ * @author Kelly Li
+ * @version 2
+ *
+ */
+public class MainUI {
+
+	private JFrame frmMainScreen;
+	private JFrame parentFrame;
+	private User authUser;
+
+	/**
+	 * Create the application.
+	 */
+	public MainUI(JFrame parentFrame, User authUser) {
+		initialize(authUser);
+		this.authUser = authUser;
+		this.parentFrame = parentFrame;
+		this.frmMainScreen.setVisible(true);
+
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(final User authUser) {
+
+		this.authUser = authUser;
+
+		frmMainScreen = new JFrame();
+		frmMainScreen.getContentPane().setBackground(Color.BLACK);
+		frmMainScreen.setBounds(100, 100, 450, 300);
+		frmMainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMainScreen.getContentPane().setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Flash Karten for Beginners");
+		lblNewLabel.setForeground(Color.YELLOW);
+		lblNewLabel.setFont(new Font("PT Serif", Font.BOLD, 19));
+		lblNewLabel.setBounds(6, 6, 351, 31);
+		frmMainScreen.getContentPane().add(lblNewLabel);
+
+		// fetch the lastName of the login User
+		JLabel lblWilkommenUser = new JLabel("Willkommen" + " "
+				+ authUser.getLastName());
+		lblWilkommenUser.setForeground(Color.RED);
+		lblWilkommenUser.setFont(new Font("PT Serif", Font.BOLD | Font.ITALIC,
+				17));
+		lblWilkommenUser.setBounds(37, 35, 261, 35);
+		frmMainScreen.getContentPane().add(lblWilkommenUser);
+
+		JButton btnCreateNewFlashcards = new JButton("Create New Flashcards");
+		btnCreateNewFlashcards.setBounds(130, 81, 168, 29);
+		frmMainScreen.getContentPane().add(btnCreateNewFlashcards);
+		btnCreateNewFlashcards.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreationUI creation = new CreationUI(frmMainScreen, authUser);
+				frmMainScreen.setVisible(false);
+			}
+		});
+		JButton btnQuizYourself = new JButton("Quiz Yourself");
+		btnQuizYourself.setBounds(130, 126, 168, 29);
+		frmMainScreen.getContentPane().add(btnQuizYourself);
+		btnQuizYourself.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StudySession session = new StudySession(authUser.getUserId());
+				FlashcardUI flash = new FlashcardUI(frmMainScreen, authUser, session);
+				frmMainScreen.setVisible(false);
+			}
+		});
+	}
+}
