@@ -1,0 +1,119 @@
+package edu.pitt.flashcard;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.Color;
+import edu.pitt.utilities.StringUtilites;
+
+/**
+ * This class is the UI for logging in. It implements the Security class to
+ * authenticate the user.
+ * 
+ * @author  Kelly Li
+ * @version 3
+ * 
+ */
+public class LoginUI {
+
+	private JFrame frmLoginScreen;
+	private JTextField txtUserName;
+	private JTextField txtPassword;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					LoginUI loginView = new LoginUI();
+					loginView.frmLoginScreen.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public LoginUI() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmLoginScreen = new JFrame();
+		frmLoginScreen.getContentPane().setBackground(Color.BLACK);
+		frmLoginScreen.setBounds(100, 100, 293, 300);
+		frmLoginScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmLoginScreen.getContentPane().setLayout(null);
+
+		JLabel lblUserName = new JLabel("User Name:");
+		lblUserName.setForeground(Color.RED);
+		lblUserName.setFont(new Font("PT Serif", Font.BOLD, 14));
+		lblUserName.setBounds(30, 68, 89, 14);
+		frmLoginScreen.getContentPane().add(lblUserName);
+
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setForeground(Color.RED);
+		lblPassword.setFont(new Font("PT Serif", Font.BOLD, 14));
+		lblPassword.setBounds(30, 116, 89, 14);
+		frmLoginScreen.getContentPane().add(lblPassword);
+
+		txtUserName = new JTextField();
+		txtUserName.setBackground(Color.YELLOW);
+		txtUserName.setBounds(129, 66, 86, 20);
+		frmLoginScreen.getContentPane().add(txtUserName);
+		txtUserName.setColumns(10);
+
+		txtPassword = new JTextField();
+		txtPassword.setBackground(Color.YELLOW);
+		txtPassword.setBounds(129, 113, 86, 20);
+		frmLoginScreen.getContentPane().add(txtPassword);
+		txtPassword.setColumns(10);
+
+		JButton btnLogin = new JButton("Log In");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Security security = new Security();
+				String lastName = txtUserName.getText();
+				String password = txtPassword.getText();
+
+				if (!lastName.equals("") && !password.equals("")) {
+					User authUser = security.validateLogin(lastName, password);
+					if (authUser != null) {
+						MainUI main = new MainUI(frmLoginScreen, authUser);
+
+						frmLoginScreen.setVisible(false);
+					} else {
+						JOptionPane.showMessageDialog(frmLoginScreen,
+								"User does not exist");
+					}
+				} else {
+					JOptionPane.showMessageDialog(frmLoginScreen,
+							"You must enter login name and password.");
+				}
+			}
+		});
+		btnLogin.setBounds(86, 160, 89, 23);
+		frmLoginScreen.getContentPane().add(btnLogin);
+
+		JLabel lblFlashKartenFor = new JLabel("Flash Karten for Beginners");
+		lblFlashKartenFor.setForeground(Color.YELLOW);
+		lblFlashKartenFor.setFont(new Font("PT Serif", Font.BOLD, 19));
+		lblFlashKartenFor.setBounds(6, 11, 271, 44);
+		frmLoginScreen.getContentPane().add(lblFlashKartenFor);
+	}
+}
